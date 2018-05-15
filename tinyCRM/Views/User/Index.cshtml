@@ -1,0 +1,71 @@
+﻿@model IEnumerable<tinyCRM.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<h2>Users</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div id="app">
+    <input v-model="search" placeholder="Search by FullName.." />
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Position)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr v-for="user in filteredList">
+            <td>
+                {{user.FullName}}
+            </td>
+            <td>
+                {{user.Position}}
+            </td>
+            <td>
+                {{user.UserName}}
+            </td>
+            <td>
+                <a :href="'/User/Edit/'+user.Id">Edit</a>
+            </td>
+            <td>
+                <a :href="'/User/Details/'+user.Id">Details</a>
+            </td>
+            <td>
+                <a :href="'/User/Delete/'+ user.Id">Delete</a>
+            </td>
+        </tr>
+    </table>
+</div>
+    <script>
+        var model = @Html.Raw(Json.Encode(Model));
+    const app = new Vue({
+        el: '#app',
+        data: {
+            search: '',
+            userList: model 
+        },
+        computed: {
+            filteredList() {
+                return this.userList.filter(user => {
+                    return user.FullName.toLowerCase().includes(this.search.toLowerCase())
+                })
+            }
+        }
+    })
+    </script>
+    
